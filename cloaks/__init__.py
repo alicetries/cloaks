@@ -94,7 +94,7 @@ class Server(BaseServer):
             cmd, *args = message.split()
             cmd = cmd.lower()
 
-            if (cmd == "!cloakme" and
+            if (cmd == "¡meow cloak plz" and
                     user.account is not None):
 
                 if not await self._cloak(user):
@@ -103,7 +103,7 @@ class Server(BaseServer):
                         f"{nick}: your account name cannot be cloaked"
                     ]))
 
-            elif (cmd == "!cloak" and
+            elif (cmd == "¡meow" and
                     args and
                     "o" in channel.users[nickl].modes):
                 nick = self.casefold(args[0])
@@ -111,31 +111,11 @@ class Server(BaseServer):
                         self.users[nickl].account is not None):
                     await self._cloak(self.users[nickl])
 
-        elif (line.command == "CHGHOST" and
-                line.params[1].startswith("user/")):
-
-            await self.send(build("KICK", [
-                self._config.channel,
-                line.hostmask.nickname,
-                "You've been cloaked"
-            ]))
-
-            cloak = line.params[1]
-            channel = self._config.channel
-            nick = line.hostmask.nickname
-            message = self._config.message.safe_substitute(cloak=cloak, channel=channel, nick=nick)
-
-            if message:
-                await self.send(build("NOTICE", [
-                    nick,
-                    message
-                ]))
-
     async def _cloak(self, user: User):
         account = user.account
         clean   = _sanitise(account)
         if not clean == "":
-            cloak = f"user/{clean}"
+            cloak = f"user/meow/{clean}"
             if not account == clean:
                 hash   = _hash(account, 7)
                 cloak += f"/x-{hash}"
